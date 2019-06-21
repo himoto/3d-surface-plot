@@ -3,14 +3,13 @@
 ![Picture1](https://user-images.githubusercontent.com/31299606/59900035-db982380-9431-11e9-9603-8f2cdbc0a8e4.png)
 
 Simulated effects of various degrees of dusp knockdown on EGF-induced and HRG-induced *c-fos* mRNA expression.
-- [Nakakuki, T. *et al.* Ligand-specific c-Fos expression emerges from the spatiotemporal control of ErbB network dynamics. *Cell* **141**, 884–896 (2010).](https://doi.org/10.1016/j.cell.2010.03.054)
 
 ## Create a surface plot
 ```python
+import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
-%matplotlib inline
 
 class Plot3D(object):
     def __init__(self, x, y, z):
@@ -39,6 +38,7 @@ class Plot3D(object):
         self.ax.set_zticks([0,1,2,3])
         self.ax.set_zlabel(r'$\it{c}$'+'-'+r'$\it{fos}$'+' mRNA\nexpression (%)',labelpad=5)
 
+
 def main():
     '''dusp mRNA knockdown efficiency'''
     x = (1-np.arange(101)/100)*100
@@ -57,11 +57,18 @@ def main():
 
     plt.show()
 
+
 if __name__ == '__main__':
     main()
 ```
 
 ## Installation
     $ git clone https://github.com/himoto/3d-surface-plot.git
+
+## References
+- Nakakuki, T. *et al.* Ligand-specific c-Fos expression emerges from the spatiotemporal control of ErbB network dynamics. *Cell* **141**, 884–896 (2010). https://doi.org/10.1016/j.cell.2010.03.054
+
+- Hunter, J. D. Matplotlib: A 2D graphics environment. Comput. *Sci. Eng.* **9**, 99–104 (2007). https://doi.org/10.1109/MCSE.2007.55
+
 ## License
 [MIT](/LICENSE)
