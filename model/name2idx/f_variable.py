@@ -30,8 +30,10 @@ F_V = [\
   'PrecfosmRNAn',
   'PreduspmRNAn',
   'cfosmRNAc',
-  'duspmRNAc'\
+  'duspmRNAc',
+  #
+  'len_f_vars'\
 ]
 
 for i,name in enumerate(F_V):
-  exec('%s=%d'%(name,i),globals())
+  exec('%s=%d'%(name,i))

@@ -1,6 +1,11 @@
 import numpy as np
 from scipy.integrate import ode
 
+from model.name2idx import f_parameter as C
+from model.name2idx import f_variable as V
+from model.param_const import f_params
+from model.initial_condition import initial_values
+from model.differential_equation import diffeq
 
 def solveode(diffeq,y0,tspan,args):
     sol = ode(diffeq)
@@ -30,22 +35,25 @@ def compute_matrix():
     z_cFosmRNA_egf = np.empty((len(sim_t),sim_n))
     for i in range(sim_n):
         x = f_params()
-        x[Ligand] = x[EGF]
-        x[p11] = x[p11]*(1-0.01*i)
+        x[C.Ligand] = x[C.EGF]
+        x[C.p11] = x[C.p11]*(1-0.01*i)
         (T,Y) = solveode(diffeq,y0,sim_t,tuple(x))
         if i==0:
-            norm_max = np.max(Y[:,cfosmRNAc])
-        z_cFosmRNA_egf[:,i] = Y[:,cfosmRNAc]/norm_max
+            norm_max = np.max(Y[:,V.cfosmRNAc])
+        z_cFosmRNA_egf[:,i] = Y[:,V.cfosmRNAc]/norm_max
     np.save('data/z_cFosmRNA_egf.npy',z_cFosmRNA_egf)
 
     # HRG-induced
     z_cFosmRNA_hrg = np.empty((len(sim_t),sim_n))
     for i in range(sim_n):
         x = f_params()
-        x[Ligand] = x[HRG]
-        x[p11] = x[p11]*(1-0.01*i)
+        x[C.Ligand] = x[C.HRG]
+        x[C.p11] = x[C.p11]*(1-0.01*i)
         (T,Y) = solveode(diffeq,y0,sim_t,tuple(x))
         if i==0:
-            norm_max = np.max(Y[:,cfosmRNAc])
-        z_cFosmRNA_hrg[:,i] = Y[:,cfosmRNAc]/norm_max
+            norm_max = np.max(Y[:,V.cfosmRNAc])
+        z_cFosmRNA_hrg[:,i] = Y[:,V.cfosmRNAc]/norm_max
     np.save('data/z_cFosmRNA_hrg.npy',z_cFosmRNA_hrg)
+
+if __name__ == "__main__":
+    compute_matrix()
