@@ -1,6 +1,6 @@
 # 3d-surface-plot
 
-![Picture1](https://user-images.githubusercontent.com/31299606/59900035-db982380-9431-11e9-9603-8f2cdbc0a8e4.png)
+![Picture1](https://user-images.githubusercontent.com/31299606/61432220-a9171300-a96a-11e9-9b6d-89acd877bffe.png)
 
 Simulated effects of various degrees of dusp knockdown on EGF-induced and HRG-induced *c-fos* mRNA expression.
 
