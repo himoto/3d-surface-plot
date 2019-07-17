@@ -44,6 +44,8 @@ def surface():
 
     plt.rcParams['font.size'] = 15
     plt.rcParams['font.family'] = 'Arial'
+    plt.rcParams['mathtext.fontset'] = 'custom'
+    plt.rcParams['mathtext.it'] = 'Arial:italic'
     plt3d = Plot3D(x, y, z)
     plt3d.surf_plot()
 
