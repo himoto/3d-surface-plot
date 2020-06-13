@@ -11,8 +11,8 @@ from get_data import compute_matrix
 compute_matrix()
 '''
 
-import plot3d
-plot3d.surface()
+%matplotlib inline
+%run -i plot3d.py
 ```
 
 ## Installation
