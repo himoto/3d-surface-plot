@@ -1,9 +1,10 @@
-from .name2idx import parameters as C
-from .name2idx import species as V
+from .name2idx.parameters import C
+from .name2idx.species import V
 
-def diffeq(t,y,x):
 
-    v = [0]*57  # Rate equations
+def diffeq(t, y, *x):
+
+    v = {}  # Rate equations
 
     v[1] = x[C.V1] * x[C.a] * y[V.ppMEKc] * y[V.ERKc] /  ( x[C.Km1] * (1 + y[V.pERKc] / x[C.Km2]) + y[V.ERKc] )
     v[2] = x[C.V2] * x[C.a] * y[V.ppMEKc] * y[V.pERKc] /  ( x[C.Km2] * (1 + y[V.ERKc] / x[C.Km1]) + y[V.pERKc] )
@@ -62,8 +63,7 @@ def diffeq(t,y,x):
     v[55] = x[C.p55] * y[V.pDUSPn_pERKn]
     v[56] = x[C.p56] * y[V.pDUSPn] * y[V.ERKn] - x[C.m56] * y[V.pDUSPn_ERKn]
 
-
-    dydt = [0] * len(V.species)
+    dydt = [0] * len(V.NAMES)
 
     if x[C.Ligand] == x[C.EGF]:  # EGF=10nM
         if t < 300.:
@@ -140,8 +140,7 @@ def diffeq(t,y,x):
 
 
 def param_values():
-
-    x = [0] * len(C.parameters)
+    x = [0] * len(C.NAMES)
 
     x[C.V1] = 1.915E-01
     x[C.Km1] = 8.482E+02
@@ -251,7 +250,7 @@ def param_values():
 
 
 def initial_values():
-    y0 = [0] * len(V.species)
+    y0 = [0] * len(V.NAMES)
 
     y0[V.ERKc] = 9.60e+02
     y0[V.RSKc] = 3.53e+02
