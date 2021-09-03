@@ -1,59 +1,32 @@
+import os
+
 import numpy as np
-from scipy.integrate import ode
+from biomass.dynamics.solver import *
+from tqdm import tqdm
 
 from model import *
 
 
-def _solveode(diffeq, y0, tspan, args):
-    sol = ode(diffeq)
-    sol.set_integrator(
-        'vode', method='bdf', with_jacobian=True,
-        atol=1e-9, rtol=1e-9, min_step=1e-8
-    )
-    sol.set_initial_value(y0, tspan[0])
-    sol.set_f_params(args)
-
-    T = [tspan[0]]
-    Y = [y0]
-
-    while sol.successful() and sol.t < tspan[-1]:
-        sol.integrate(sol.t + 1.)
-        T.append(sol.t)
-        Y.append(sol.y)
-
-    return np.array(T), np.array(Y)
-
-
 def compute_matrix():
-    # setInitial
-    y0 = initial_values()
+    os.makedirs("data", exist_ok=True)
 
     sim_n = 101
     sim_t = range(5401)
+    sim_ligand = ["EGF", "HRG"]
 
-    # EGF-induced
-    z_cFosmRNA_egf = np.empty((len(sim_t), sim_n))
-    for i in range(sim_n):
+    z_cFosmRNA = np.empty((len(sim_ligand), sim_n, len(sim_t)))
+    norm_max = np.empty_like(sim_ligand, dtype=float)
+    x = param_values()
+    y0 = initial_values()
+    y_ss = get_steady_state(diffeq, y0, tuple(x))
+    for i in tqdm(range(sim_n)):
         x = param_values()
-        x[C.Ligand] = x[C.EGF]
-        x[C.p11] = x[C.p11] * (1-0.01*i)
-        (T, Y) = _solveode(diffeq, y0, sim_t, tuple(x))
-        if i == 0:
-            norm_max = np.max(Y[:,V.cfosmRNAc])
-        z_cFosmRNA_egf[:,i] = Y[:,V.cfosmRNAc] / norm_max
-    np.save('data/z_cFosmRNA_egf.npy', z_cFosmRNA_egf)
+        x[C.p11] *= (1 - 0.01 * i)
+        for j, ligand in enumerate(sim_ligand):
+            x[C.Ligand] = x[C.NAMES.index(ligand)]
+            sol = solve_ode(diffeq, y_ss, sim_t, tuple(x))
+            if i == 0:
+                norm_max[j] = np.max(sol.y[V.cfosmRNAc, :])
+            z_cFosmRNA[j, i, :] = sol.y[V.cfosmRNAc, :] / norm_max[j]
 
-    # HRG-induced
-    z_cFosmRNA_hrg = np.empty((len(sim_t), sim_n))
-    for i in range(sim_n):
-        x = param_values()
-        x[C.Ligand] = x[C.HRG]
-        x[C.p11] = x[C.p11] * (1-0.01*i)
-        (T,Y) = _solveode(diffeq, y0, sim_t, tuple(x))
-        if i==0:
-            norm_max = np.max(Y[:,V.cfosmRNAc])
-        z_cFosmRNA_hrg[:,i] = Y[:,V.cfosmRNAc] / norm_max
-    np.save('data/z_cFosmRNA_hrg.npy', z_cFosmRNA_hrg)
-
-if __name__ == "__main__":
-    compute_matrix()
+    np.save(os.path.join("data", "z_cFosmRNA.npy"), z_cFosmRNA)
