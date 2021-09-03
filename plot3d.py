@@ -1,6 +1,5 @@
-import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Plot3D(object):
@@ -48,8 +47,8 @@ def main():
     y = np.arange(5401) / 60
 
     '''c-fos mRNA expression'''
-    z = np.load('data/z_cFosmRNA_egf.npy')
-    # z = np.load('data/z_cFosmRNA_hrg.npy')
+    z = np.load('data/z_cFosmRNA.npy')[0].T
+    # z = np.load('data/z_cFosmRNA.npy')[1].T
 
     plt.rcParams['font.size'] = 20
     plt.rcParams['font.family'] = 'Arial'
